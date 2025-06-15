@@ -11,7 +11,7 @@ MUPDF_FLAGS = (
 from pdfminer.high_level import extract_text as pdfminer_extract
 
 from .ocr_fallback import ocr_pdf_to_text
-from .latex_converter import extract_with_latexocr
+from .latex_converter import detect_formulas, extract_with_latexocr
 
 
 def extract_with_pymupdf(pdf_path: Path) -> str:
@@ -49,11 +49,32 @@ def convert_pdf_to_text(
         if via_latex:
             text = extract_with_latexocr(pdf_path)
         else:
-            text = extract_with_pymupdf(pdf_path)
+            page_texts = []
+            first_pages = []
+            with fitz.open(pdf_path) as doc:
+                for i, page in enumerate(doc):
+                    ptext = page.get_text("text", flags=MUPDF_FLAGS)
+                    page_texts.append(ptext)
+                    if i < 2:
+                        first_pages.append(ptext)
+            text = "\n".join(page_texts)
+
             if not text.strip():
                 text = extract_with_pdfminer(pdf_path)
+                page_texts = [text]
             if not text.strip() and use_ocr:
                 text = ocr_pdf_to_text(pdf_path)
+                page_texts = [text]
+
+            if first_pages and detect_formulas("\n".join(first_pages)):
+                try:
+                    latex_pages = extract_with_latexocr(pdf_path, pages=range(min(2, len(page_texts))))
+                    for idx, ltxt in enumerate(latex_pages):
+                        if idx < len(page_texts):
+                            page_texts[idx] = ltxt
+                    text = "\n".join(page_texts)
+                except Exception as e:
+                    logger.error(f"LaTeX-OCR auto retry failed for {pdf_path.name}: {e}")
         if not text:
             raise ValueError("No text extracted")
         with open(txt_path, mode, encoding="utf-8") as f:

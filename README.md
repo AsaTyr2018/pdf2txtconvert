@@ -34,7 +34,7 @@ python -m pdf2txt --input-folder ./input_pdfs --output-folder ./output_txts
 
 - `--overwrite [skip|yes|append]` – what to do if the TXT already exists (default `skip`)
 - `--use-ocr` – enable OCR fallback for scanned PDFs
-- `--via-latex` – use LaTeX-OCR pipeline for better formula handling
+- `--via-latex` – force LaTeX-OCR on all pages for better formula handling. Without this flag the first pages are scanned for formulas and automatically reprocessed when needed.
 - `--jobs N` – number of parallel workers (default `1`)
 
 The log file `conversion.log` is created in the output directory. OCR no longer needs Poppler because pages are rendered with PyMuPDF.
@@ -43,6 +43,7 @@ The log file `conversion.log` is created in the output directory. OCR no longer 
 
 Extraction now preserves whitespace and ligatures so multi-line mathematical formulas and special characters survive conversion.
 When the optional `--via-latex` flag is used, pages are processed with [LaTeX-OCR](https://github.com/lukas-blecher/LaTeX-OCR) to generate LaTeX code first and then converted to plain text for improved table and formula handling.
+Without the flag the first pages are scanned automatically and rerun through LaTeX-OCR whenever formulas are detected.
 
 ## setup.sh helper
 
