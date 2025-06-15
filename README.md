@@ -7,7 +7,7 @@
 The easiest way to install is the one-line curl setup which downloads this repository and runs the installer:
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/youruser/pdf2txtconvert/main/quick_install.sh | bash
+curl -sSL https://raw.githubusercontent.com/AsaTyr2018/pdf2txtconvert/main/quick_install.sh | bash
 ```
 
 After installation you will find `pdf2txt` in `/opt/pdf2txtconvert` along with helper scripts. To update or remove it simply rerun the script with `--update` or `--deinstall`.
@@ -17,7 +17,7 @@ After installation you will find `pdf2txt` in `/opt/pdf2txtconvert` along with h
 Clone the repository and install the Python requirements yourself if you prefer a local checkout:
 
 ```bash
-git clone https://github.com/youruser/pdf2txtconvert.git
+git clone https://github.com/AsaTyr2018/pdf2txtconvert.git
 cd pdf2txtconvert
 pip install -r requirements.txt
 ```
