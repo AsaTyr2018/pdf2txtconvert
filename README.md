@@ -47,3 +47,21 @@ folders. The script accepts the following commands:
 that directory. If `--daemon` is supplied, a cron job is added to run the
 converter every five minutes. Use `--deinstall` to remove the installation and
 `--update` to pull the latest changes from git.
+
+### Quick Install via Curl
+
+For a one-liner installation that clones the repository and runs the setup
+script, use the provided `quick_install.sh` helper. This requires `git` and
+`sudo` to be available on the machine.
+
+```bash
+curl -sSL https://raw.githubusercontent.com/youruser/pdf2txtconvert/main/quick_install.sh | bash
+```
+
+Any arguments after the script URL are passed directly to `setup.sh`. For
+example, to install and enable daemon mode:
+
+```bash
+curl -sSL https://raw.githubusercontent.com/youruser/pdf2txtconvert/main/quick_install.sh | bash -s -- --daemon
+```
+
