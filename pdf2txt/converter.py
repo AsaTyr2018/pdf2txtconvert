@@ -1,16 +1,24 @@
 from pathlib import Path
 from loguru import logger
 import fitz  # PyMuPDF
+
+# Flags to preserve layout and special characters
+MUPDF_FLAGS = (
+    fitz.TEXT_PRESERVE_WHITESPACE
+    | fitz.TEXT_PRESERVE_LIGATURES
+    | fitz.TEXT_INHIBIT_SPACES
+)
 from pdfminer.high_level import extract_text as pdfminer_extract
 
 from .ocr_fallback import ocr_pdf_to_text
 
 
 def extract_with_pymupdf(pdf_path: Path) -> str:
+    """Extract text from a PDF using PyMuPDF with layout preservation."""
     text = []
     with fitz.open(pdf_path) as doc:
         for page in doc:
-            text.append(page.get_text())
+            text.append(page.get_text("text", flags=MUPDF_FLAGS))
     return "\n".join(text)
 
 
