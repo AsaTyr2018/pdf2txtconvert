@@ -1,40 +1,46 @@
 # pdf2txtconvert
 
-`pdf2txt` is a command-line tool for bulk converting PDF files to plain text. It
-scans an input directory for PDFs and saves the results to an output directory
-with the same base filenames. A log file is created to record successes and
-failures.
+`pdf2txt` is a minimal command line tool for turning a folder full of PDFs into plain text files. It preserves file names, writes a `conversion.log` with successes and errors and can optionally use OCR for scanned PDFs.
 
-## Installation
+## Quick start
 
-Install dependencies with pip:
+The easiest way to install is the one-line curl setup which downloads this repository and runs the installer:
 
 ```bash
+curl -sSL https://raw.githubusercontent.com/youruser/pdf2txtconvert/main/quick_install.sh | bash
+```
+
+After installation you will find `pdf2txt` in `/opt/pdf2txtconvert` along with helper scripts. To update or remove it simply rerun the script with `--update` or `--deinstall`.
+
+## Manual installation
+
+Clone the repository and install the Python requirements yourself if you prefer a local checkout:
+
+```bash
+git clone https://github.com/youruser/pdf2txtconvert.git
+cd pdf2txtconvert
 pip install -r requirements.txt
 ```
 
 ## Usage
 
+Run the converter by pointing it at an input directory with PDFs and an output directory for the text files:
+
 ```bash
 python -m pdf2txt --input-folder ./input_pdfs --output-folder ./output_txts
 ```
 
-Options:
+### Useful options
 
-- `--overwrite [skip|yes|append]` – control existing TXT files (default `skip`).
-- `--use-ocr` – enable OCR fallback for scanned PDFs (requires Tesseract).
-- `--jobs N` – number of parallel workers (default `1`).
+- `--overwrite [skip|yes|append]` – what to do if the TXT already exists (default `skip`)
+- `--use-ocr` – enable OCR fallback for scanned PDFs
+- `--jobs N` – number of parallel workers (default `1`)
 
-The log file `conversion.log` is written inside the output folder.
+The log file `conversion.log` is created in the output directory. OCR no longer needs Poppler because pages are rendered with PyMuPDF.
 
-Note: OCR processing now renders pages with PyMuPDF, so Poppler is **not**
-required for image-based PDFs.
+## setup.sh helper
 
-### Setup Script
-
-The repository includes a `setup.sh` script that can install the converter to
-`/opt/pdf2txtconvert` with a Python virtual environment and fixed input/output
-folders. The script accepts the following commands:
+`setup.sh` installs the project to `/opt/pdf2txtconvert` with a virtual environment and fixed input/output folders.
 
 ```
 ./setup.sh --install [--daemon]
@@ -42,26 +48,4 @@ folders. The script accepts the following commands:
 ./setup.sh --update
 ```
 
-`--install` copies the project to `/opt/pdf2txtconvert`, installs dependencies
-(including Tesseract if available), and creates a `run_converter.sh` helper in
-that directory. If `--daemon` is supplied, a cron job is added to run the
-converter every five minutes. Use `--deinstall` to remove the installation and
-`--update` to pull the latest changes from git.
-
-### Quick Install via Curl
-
-For a one-liner installation that clones the repository and runs the setup
-script, use the provided `quick_install.sh` helper. This requires `git` and
-`sudo` to be available on the machine.
-
-```bash
-curl -sSL https://raw.githubusercontent.com/youruser/pdf2txtconvert/main/quick_install.sh | bash
-```
-
-Any arguments after the script URL are passed directly to `setup.sh`. For
-example, to install and enable daemon mode:
-
-```bash
-curl -sSL https://raw.githubusercontent.com/youruser/pdf2txtconvert/main/quick_install.sh | bash -s -- --daemon
-```
-
+Passing `--daemon` adds a cron entry to process PDFs every five minutes. Logs are stored alongside the installation.
