@@ -15,8 +15,9 @@ from .logger_config import configure
 @click.option('--output-folder', required=True, type=click.Path(file_okay=False))
 @click.option('--overwrite', default='skip', type=click.Choice(['skip', 'yes', 'append']), show_default=True)
 @click.option('--use-ocr', is_flag=True, help='Enable OCR fallback for image-based PDFs')
+@click.option('--via-latex', is_flag=True, help='Use LaTeX-OCR pipeline')
 @click.option('--jobs', default=1, show_default=True, type=int, help='Number of parallel workers')
-def main(input_folder, output_folder, overwrite, use_ocr, jobs):
+def main(input_folder, output_folder, overwrite, use_ocr, via_latex, jobs):
     """Bulk convert PDF files to TXT."""
     output = Path(output_folder)
     output.mkdir(parents=True, exist_ok=True)
@@ -29,7 +30,13 @@ def main(input_folder, output_folder, overwrite, use_ocr, jobs):
 
     def process(pdf_path: Path):
         txt_path = output / f"{pdf_path.stem}.txt"
-        return convert_pdf_to_text(pdf_path, txt_path, overwrite=overwrite, use_ocr=use_ocr)
+        return convert_pdf_to_text(
+            pdf_path,
+            txt_path,
+            overwrite=overwrite,
+            use_ocr=use_ocr,
+            via_latex=via_latex,
+        )
 
     if jobs > 1:
         with ThreadPoolExecutor(max_workers=jobs) as executor:

@@ -11,6 +11,7 @@ MUPDF_FLAGS = (
 from pdfminer.high_level import extract_text as pdfminer_extract
 
 from .ocr_fallback import ocr_pdf_to_text
+from .latex_converter import extract_with_latexocr
 
 
 def extract_with_pymupdf(pdf_path: Path) -> str:
@@ -26,7 +27,14 @@ def extract_with_pdfminer(pdf_path: Path) -> str:
     return pdfminer_extract(str(pdf_path))
 
 
-def convert_pdf_to_text(pdf_path: Path, txt_path: Path, *, overwrite: str = "skip", use_ocr: bool = False) -> str:
+def convert_pdf_to_text(
+    pdf_path: Path,
+    txt_path: Path,
+    *,
+    overwrite: str = "skip",
+    use_ocr: bool = False,
+    via_latex: bool = False,
+) -> str:
     """Convert a PDF to text file. Returns status string."""
     mode = "w"
     if txt_path.exists():
@@ -38,11 +46,14 @@ def convert_pdf_to_text(pdf_path: Path, txt_path: Path, *, overwrite: str = "ski
         else:
             mode = "w"
     try:
-        text = extract_with_pymupdf(pdf_path)
-        if not text.strip():
-            text = extract_with_pdfminer(pdf_path)
-        if not text.strip() and use_ocr:
-            text = ocr_pdf_to_text(pdf_path)
+        if via_latex:
+            text = extract_with_latexocr(pdf_path)
+        else:
+            text = extract_with_pymupdf(pdf_path)
+            if not text.strip():
+                text = extract_with_pdfminer(pdf_path)
+            if not text.strip() and use_ocr:
+                text = ocr_pdf_to_text(pdf_path)
         if not text:
             raise ValueError("No text extracted")
         with open(txt_path, mode, encoding="utf-8") as f:
