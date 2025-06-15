@@ -1,14 +1,18 @@
 from pathlib import Path
-from pdf2image import convert_from_path
+from io import BytesIO
+
 from PIL import Image
 import pytesseract
+import fitz  # PyMuPDF
 
 
 def ocr_pdf_to_text(pdf_path: Path) -> str:
-    """Extract text from PDF using OCR."""
+    """Extract text from PDF using OCR without requiring Poppler."""
     text_chunks = []
-    images = convert_from_path(str(pdf_path))
-    for img in images:
-        text = pytesseract.image_to_string(img)
-        text_chunks.append(text)
+    with fitz.open(pdf_path) as doc:
+        for page in doc:
+            pix = page.get_pixmap()
+            image = Image.open(BytesIO(pix.tobytes("png")))
+            text = pytesseract.image_to_string(image)
+            text_chunks.append(text)
     return "\n".join(text_chunks)
