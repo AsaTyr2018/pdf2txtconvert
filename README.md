@@ -29,3 +29,21 @@ The log file `conversion.log` is written inside the output folder.
 
 Note: OCR processing now renders pages with PyMuPDF, so Poppler is **not**
 required for image-based PDFs.
+
+### Setup Script
+
+The repository includes a `setup.sh` script that can install the converter to
+`/opt/pdf2txtconvert` with a Python virtual environment and fixed input/output
+folders. The script accepts the following commands:
+
+```
+./setup.sh --install [--daemon]
+./setup.sh --deinstall
+./setup.sh --update
+```
+
+`--install` copies the project to `/opt/pdf2txtconvert`, installs dependencies
+(including Tesseract if available), and creates a `run_converter.sh` helper in
+that directory. If `--daemon` is supplied, a cron job is added to run the
+converter every five minutes. Use `--deinstall` to remove the installation and
+`--update` to pull the latest changes from git.
