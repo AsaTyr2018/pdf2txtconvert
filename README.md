@@ -50,9 +50,9 @@ Without the flag the first pages are scanned automatically and rerun through LaT
 `setup.sh` installs the project to `/opt/pdf2txtconvert` with a virtual environment and fixed input/output folders.
 
 ```
-./setup.sh --install [--daemon]
+./setup.sh --install [--daemon] [--gpu]
 ./setup.sh --deinstall
-./setup.sh --update
+./setup.sh --update [--gpu]
 ```
 
-Passing `--daemon` adds a cron entry to process PDFs every five minutes. Logs are stored alongside the installation.
+Use `--gpu` during install or update to set up PyTorch with CUDA support. Passing `--daemon` adds a cron entry to process PDFs every five minutes. Logs are stored alongside the installation.

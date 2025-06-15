@@ -7,9 +7,10 @@ INPUT_DIR="$INSTALL_DIR/input"
 OUTPUT_DIR="$INSTALL_DIR/output"
 VENV_DIR="$INSTALL_DIR/venv"
 RUN_SCRIPT="$INSTALL_DIR/run_converter.sh"
+GPU=0
 
 usage() {
-    echo "Usage: $0 [--install|--deinstall|--update] [--daemon]"
+    echo "Usage: $0 [--install|--deinstall|--update] [--daemon] [--gpu]"
     exit 1
 }
 
@@ -29,6 +30,9 @@ install() {
     source "$VENV_DIR/bin/activate"
     pip install --upgrade pip
     pip install -r "$INSTALL_DIR/requirements.txt"
+    if [ "$GPU" -eq 1 ]; then
+        pip install --extra-index-url https://download.pytorch.org/whl/cu118 torch torchvision torchaudio
+    fi
     deactivate
     mkdir -p "$INPUT_DIR" "$OUTPUT_DIR"
     cat <<EOS > "$RUN_SCRIPT"
@@ -52,6 +56,9 @@ update() {
         git -C "$INSTALL_DIR" pull
         source "$VENV_DIR/bin/activate"
         pip install -r "$INSTALL_DIR/requirements.txt"
+        if [ "$GPU" -eq 1 ]; then
+            pip install --extra-index-url https://download.pytorch.org/whl/cu118 torch torchvision torchaudio
+        fi
         deactivate
     else
         echo "No git repository found in $INSTALL_DIR"
@@ -66,6 +73,7 @@ while [ $# -gt 0 ]; do
         --deinstall) ACTION="deinstall" ; shift ;;
         --update) ACTION="update" ; shift ;;
         --daemon) DAEMON=1 ; shift ;;
+        --gpu) GPU=1 ; shift ;;
         *) usage ;;
     esac
 done

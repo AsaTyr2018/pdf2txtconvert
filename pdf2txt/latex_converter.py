@@ -47,6 +47,12 @@ def extract_with_latexocr(
                 continue
             page = doc[pno]
             pix = page.get_pixmap()
+            if pix.width == 0 or pix.height == 0:
+                logger.warning(
+                    f"Skipping page {pno+1} for LaTeX-OCR: invalid size {pix.width}x{pix.height}"
+                )
+                results.append("")
+                continue
             image = Image.open(BytesIO(pix.tobytes("png")))
             try:
                 latex = ocr_model(image)
