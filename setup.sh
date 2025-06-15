@@ -50,6 +50,9 @@ deinstall() {
 update() {
     if [ -d "$INSTALL_DIR/.git" ]; then
         git -C "$INSTALL_DIR" pull
+        source "$VENV_DIR/bin/activate"
+        pip install -r "$INSTALL_DIR/requirements.txt"
+        deactivate
     else
         echo "No git repository found in $INSTALL_DIR"
     fi
