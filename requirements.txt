@@ -1,0 +1,20 @@
+# Core PDF parsing
+PyMuPDF>=1.24.3        
+pdfminer.six>=20221105 
+
+# OCR-Fallback 
+pytesseract>=0.3.10    
+pdf2image>=1.17.0      
+Pillow>=10.0.0         
+
+# CLI & UX
+click>=8.1.7           
+rich>=13.7.0           
+tqdm>=4.66.2           
+
+# Logging & Utilities
+loguru>=0.7.2          
+python-dotenv>=1.0.1   
+
+# Parallel Processing
+rapidfuzz>=3.6.1       
