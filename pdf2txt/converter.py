@@ -6,7 +6,6 @@ import fitz  # PyMuPDF
 MUPDF_FLAGS = (
     fitz.TEXT_PRESERVE_WHITESPACE
     | fitz.TEXT_PRESERVE_LIGATURES
-    | fitz.TEXT_INHIBIT_SPACES
 )
 from pdfminer.high_level import extract_text as pdfminer_extract
 

@@ -41,7 +41,7 @@ The log file `conversion.log` is created in the output directory. OCR no longer 
 
 ### Handling mathematical formulas
 
-Extraction now preserves whitespace and ligatures so multi-line mathematical formulas and special characters survive conversion.
+Extraction now preserves whitespace and ligatures so multi-line mathematical formulas and special characters survive conversion. The PyMuPDF extraction flags were adjusted to keep spaces even when PDFs lack explicit space characters.
 When the optional `--via-latex` flag is used, pages are processed with [LaTeX-OCR](https://github.com/lukas-blecher/LaTeX-OCR) to generate LaTeX code first and then converted to plain text for improved table and formula handling.
 Without the flag the first pages are scanned automatically and rerun through LaTeX-OCR whenever formulas are detected.
 
