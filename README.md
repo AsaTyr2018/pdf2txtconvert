@@ -38,6 +38,10 @@ python -m pdf2txt --input-folder ./input_pdfs --output-folder ./output_txts
 
 The log file `conversion.log` is created in the output directory. OCR no longer needs Poppler because pages are rendered with PyMuPDF.
 
+### Handling mathematical formulas
+
+Extraction now preserves whitespace and ligatures so multi-line mathematical formulas and special characters survive conversion.
+
 ## setup.sh helper
 
 `setup.sh` installs the project to `/opt/pdf2txtconvert` with a virtual environment and fixed input/output folders.
